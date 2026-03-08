@@ -133,7 +133,7 @@ async function createDiscordClientForBot(
   // Set up event handlers
   client.once("ready", () => {
     console.log(`Bot [${botConfig.id}] logged in as ${client.user?.tag}`);
-    client.user.setActivity('Spelar Schack');
+    client.user?.setActivity("Spelar Schack");
 
   });
 
@@ -171,11 +171,11 @@ async function createDiscordClientForBot(
     const botUsername = botUser.username.toLowerCase();
 
     // Check if the message mentions or references the bot
-    // const isMentioned = message.mentions.users.has(botUser.id);
-    // const containsBotName = message.content.toLowerCase().includes(botUsername);
+    const isMentioned = message.mentions.users.has(botUser.id);
+    const containsBotName = message.content.toLowerCase().includes(botUsername);
 
     // Ignore if the bot is not mentioned or referenced
-    // if (!isMentioned && !containsBotName) return;
+     if (false) return;
 
     try {
       // Show typing indicator
@@ -206,7 +206,7 @@ async function createDiscordClientForBot(
       }
 
       // If it was a mention, reply to the message. Otherwise, send as normal message
-      if (isMentioned) {
+       if (isMentioned) {
         await message.reply(aiResult.reply);
       } else if (
         message.channel instanceof BaseGuildTextChannel ||
@@ -218,7 +218,7 @@ async function createDiscordClientForBot(
       console.error(`[Bot ${botConfig.id}] Error:`, error);
       const errorMessage =
         "Beep boop, something went wrong. Please contact the Kindroid owner if this keeps up!";
-      if (isMentioned) {
+     if (isMentioned) {
         await message.reply(errorMessage);
       } else if (
         message.channel instanceof BaseGuildTextChannel ||

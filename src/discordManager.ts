@@ -135,6 +135,19 @@ async function createDiscordClientForBot(
     console.log(`Bot [${botConfig.id}] logged in as ${client.user?.tag}`);
     client.user?.setActivity("Spelar Schack");
 
+    // Detta körs VARJE DAG kl 07:00 (Svensk tid om Railway-servern står rätt)
+    // Formatet är: Minut Timme Dag Månad Veckodag
+    cron.schedule('0 8 * * *', async () => {
+      const channel = await client.channels.fetch("DITT_KANAL_ID_HÄR");
+      if (channel?.isTextBased()) {
+        // Här kan du skriva vad hon ska säga, eller be henne generera något
+        await channel.send("God morgon! ☕️ Hoppas du har sovit gott.");
+      }
+    }, {
+      timezone: "Europe/Stockholm" // Viktigt så hon inte väcker dig mitt i natten!
+    });
+  });
+
   });
 
   // Handle incoming messages

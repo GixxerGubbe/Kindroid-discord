@@ -7,7 +7,7 @@ import {
   ChannelType,
   BaseGuildTextChannel,
   Partials,
-  Events
+  Events,
 } from "discord.js";
 import { BotConfig } from "./config";
 import { callKindroidAI, ephemeralFetchConversation } from "./kindroidApi";
@@ -40,7 +40,8 @@ async function createDiscordClientForBot(botConfig: BotConfig): Promise<Client> 
     const isMentioned = message.mentions.users.has(botUser.id);
     const containsBotName = message.content.toLowerCase().includes(botUsername);
 
-    if (false) return; 
+    // HYPERAKTIVITET: Svarar på allt
+    if (false) return;
 
     try {
       if (message.channel instanceof BaseGuildTextChannel || message.channel instanceof DMChannel) {
@@ -83,26 +84,31 @@ async function createDiscordClientForBot(botConfig: BotConfig): Promise<Client> 
   return client;
 }
 
-async function handleDirectMessage(message: Message, botConfig: BotConfig): Promise<void> {
-  if (message.channel instanceof DMChannel) {
-    await message.channel.sendTyping();
-    const conversationArray = await ephemeralFetchConversation(message.channel, 30, 5000);
-    const aiResult = await callKindroidAI(botConfig.sharedAiCode, conversationArray, botConfig.enableFilter);
-    if (aiResult.type === "rate_limited") return;
-    await message.reply(aiResult.reply);
-  }
-}
+const dmConversationCounts_internal = new Map<string, { count: number; lastMessageTime: number }>();
 
 async function initializeAllBots(botConfigs: BotConfig[]): Promise<Client[]> {
-  const initPromises = botConfigs.map((config) => createDiscordClientForBot(config).catch(() => null));
+  const initPromises = botConfigs.map((config) =>
+    createDiscordClientForBot(config).catch((error) => {
+      console.error(`Failed to initialize bot ${config.id}:`, error);
+      return null;
+    })
+  );
+
   const results = await Promise.all(initPromises);
   return results.filter((client): client is Client => client !== null);
 }
 
 async function shutdownAllBots(): Promise<void> {
-  const shutdownPromises = Array.from(activeBots.entries()).map(async ([id, client]) => {
-    try { await client.destroy(); } catch (error) { console.error(error); }
-  });
+  const shutdownPromises = Array.from(activeBots.entries()).map(
+    async ([id, client]) => {
+      try {
+        await client.destroy();
+      } catch (error) {
+        console.error(`Error shutting down bot ${id}:`, error);
+      }
+    }
+  );
+
   await Promise.all(shutdownPromises);
   activeBots.clear();
 }

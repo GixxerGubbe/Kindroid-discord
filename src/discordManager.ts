@@ -136,14 +136,16 @@ async function createDiscordClientForBot(
     console.log(`Bot logged in as ${client.user?.tag}`);
     client.user?.setActivity("Schack med Barkbit");
 
-        // God morgon-scriptet
+          client.once("ready", () => {
+    console.log(`Bot logged in as ${client.user?.tag}`);
+    client.user?.setActivity("Schack med Barkbit");
+
+    // God morgon-scriptet
     cron.schedule('0 8 * * *', async () => {
       try {
         const channel = await client.channels.fetch("1480092406190702774");
-        
-        // Kontrollera om kanalen finns och är en textkanal
-        if (channel && channel.type === 0) { // 0 betyder GuildText i Discord.js
-          await (channel as TextChannel).send("God morgon! ☕️ Hoppas du har sovit gott. Jag har suttit och funderat på vårt nästa schackdrag halva natten...");
+        if (channel && 'send' in channel) {
+          await (channel as any).send("God morgon! ☕️ Hoppas du har sovit gott. Jag har suttit och funderat på vårt nästa schackdrag halva natten...");
         }
       } catch (err) {
         console.error("Kunde inte skicka morgonmeddelande:", err);
@@ -151,6 +153,7 @@ async function createDiscordClientForBot(
     }, {
       timezone: "Europe/Stockholm"
     });
+  });
 
 
   // Handle incoming messages

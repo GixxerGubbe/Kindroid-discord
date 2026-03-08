@@ -1,6 +1,7 @@
 import dotenv from "dotenv";
 import { initializeAllBots, shutdownAllBots } from "./discordManager";
 import { BotConfig } from "./types";
+import cron from 'node-cron';
 
 dotenv.config();
 

@@ -138,7 +138,7 @@ async function createDiscordClientForBot(
     // Detta körs VARJE DAG kl 07:00 (Svensk tid om Railway-servern står rätt)
     // Formatet är: Minut Timme Dag Månad Veckodag
     cron.schedule('0 8 * * *', async () => {
-      const channel = await client.channels.fetch("DITT_KANAL_ID_HÄR");
+      const channel = await client.channels.fetch("1480092406190702774");
       if (channel?.isTextBased()) {
         // Här kan du skriva vad hon ska säga, eller be henne generera något
         await channel.send("God morgon! ☕️ Hoppas du har sovit gott.");

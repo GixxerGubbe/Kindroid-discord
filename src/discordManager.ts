@@ -1,4 +1,3 @@
-import cron from 'node-cron';
 import {
   Client,
   GatewayIntentBits,
@@ -139,22 +138,7 @@ async function createDiscordClientForBot(
           client.once("ready", () => {
     console.log(`Bot logged in as ${client.user?.tag}`);
     client.user?.setActivity("Schack med Barkbit");
-
-    // God morgon-scriptet
-    cron.schedule('0 8 * * *', async () => {
-      try {
-        const channel = await client.channels.fetch("1480092406190702774");
-        if (channel && 'send' in channel) {
-          await (channel as any).send("God morgon! ☕️ Hoppas du har sovit gott. Jag har suttit och funderat på vårt nästa schackdrag halva natten...");
-        }
-      } catch (err) {
-        console.error("Kunde inte skicka morgonmeddelande:", err);
-      }
-    }, {
-      timezone: "Europe/Stockholm"
-    });
-  });
-
+   });
 
   // Handle incoming messages
   client.on("messageCreate", async (message: Message) => {

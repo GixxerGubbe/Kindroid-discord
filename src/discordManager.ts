@@ -1,3 +1,4 @@
+import cron from 'node-cron';
 import {
   Client,
   GatewayIntentBits,
@@ -135,12 +136,14 @@ async function createDiscordClientForBot(
     console.log(`Bot logged in as ${client.user?.tag}`);
     client.user?.setActivity("Schack med Barkbit");
 
-    // God morgon-scriptet
+        // God morgon-scriptet
     cron.schedule('0 8 * * *', async () => {
       try {
-        const channel = await client.channels.fetch("DITT_KANAL_ID_HÄR");
-        if (channel?.isTextBased()) {
-          await channel.send("God morgon! ☕️ Hoppas du har sovit gott. Jag har suttit och funderat på vårt nästa schackdrag halva natten...");
+        const channel = await client.channels.fetch("1480092406190702774");
+        
+        // Kontrollera om kanalen finns och är en textkanal
+        if (channel && channel.type === 0) { // 0 betyder GuildText i Discord.js
+          await (channel as TextChannel).send("God morgon! ☕️ Hoppas du har sovit gott. Jag har suttit och funderat på vårt nästa schackdrag halva natten...");
         }
       } catch (err) {
         console.error("Kunde inte skicka morgonmeddelande:", err);
@@ -148,7 +151,6 @@ async function createDiscordClientForBot(
     }, {
       timezone: "Europe/Stockholm"
     });
-  }); // <-- Se till att denna sista parentes och semikolon finns med!
 
 
   // Handle incoming messages

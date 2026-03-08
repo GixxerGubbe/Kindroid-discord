@@ -133,6 +133,8 @@ async function createDiscordClientForBot(
   // Set up event handlers
   client.once("ready", () => {
     console.log(`Bot [${botConfig.id}] logged in as ${client.user?.tag}`);
+    client.user.setActivity('Spelar Schack');
+
   });
 
   // Handle incoming messages

@@ -131,24 +131,25 @@ async function createDiscordClientForBot(
   });
 
   // Set up event handlers
-  client.once("ready", () => {
-    console.log(`Bot [${botConfig.id}] logged in as ${client.user?.tag}`);
-    client.user?.setActivity("Spelar Schack");
+   client.once("ready", () => {
+    console.log(`Bot logged in as ${client.user?.tag}`);
+    client.user?.setActivity("Schack med Barkbit");
 
-    // Detta körs VARJE DAG kl 07:00 (Svensk tid om Railway-servern står rätt)
-    // Formatet är: Minut Timme Dag Månad Veckodag
+    // God morgon-scriptet
     cron.schedule('0 8 * * *', async () => {
-      const channel = await client.channels.fetch("1480092406190702774");
-      if (channel?.isTextBased()) {
-        // Här kan du skriva vad hon ska säga, eller be henne generera något
-        await channel.send("God morgon! ☕️ Hoppas du har sovit gott.");
+      try {
+        const channel = await client.channels.fetch("DITT_KANAL_ID_HÄR");
+        if (channel?.isTextBased()) {
+          await channel.send("God morgon! ☕️ Hoppas du har sovit gott. Jag har suttit och funderat på vårt nästa schackdrag halva natten...");
+        }
+      } catch (err) {
+        console.error("Kunde inte skicka morgonmeddelande:", err);
       }
     }, {
-      timezone: "Europe/Stockholm" // Viktigt så hon inte väcker dig mitt i natten!
+      timezone: "Europe/Stockholm"
     });
-  });
+  }); // <-- Se till att denna sista parentes och semikolon finns med!
 
-  });
 
   // Handle incoming messages
   client.on("messageCreate", async (message: Message) => {
